@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -std=c++11 -O3  -shared -Wl,-soname,libDelta.so.1 -o libDelta.so.1 CMakeFiles/Delta.dir/delta.o CMakeFiles/Delta.dir/plugin.o  -L/fledge/cmake_build/C/lib -Wl,-rpath,/fledge/cmake_build/C/lib: -lcommon-lib -lplugins-common-lib 
