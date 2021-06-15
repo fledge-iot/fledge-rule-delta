@@ -23,6 +23,10 @@
 #include "version.h"
 #include "delta.h"
 
+
+#include <typeinfo>
+
+
 #define RULE_NAME "Delta"
 #define DEFAULT_TIME_INTERVAL	30
 
@@ -115,7 +119,7 @@ PLUGIN_INFORMATION *plugin_info()
  */
 PLUGIN_HANDLE plugin_init(const ConfigCategory& config)
 {
-	
+
 	DeltaRule *handle = new DeltaRule();
 	handle->configure(config);
 
@@ -166,7 +170,7 @@ string plugin_triggers(PLUGIN_HANDLE handle)
 	{
 		ret += "{ \"asset\"  : \"" + (*it).first + "\"";
 		ret += " }";
-		
+
 		if (std::next(it, 1) != triggers.end())
 		{
 			ret += ", ";
@@ -199,7 +203,7 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 		return false;
 	}
 
-	bool eval = false; 
+	bool eval = false;
 	DeltaRule *rule = (DeltaRule *)handle;
 	map<std::string, RuleTrigger *>& triggers = rule->getTriggers();
 
@@ -218,6 +222,7 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 			for (Value::ConstMemberIterator itr = assetValue.MemberBegin();
 					    itr != assetValue.MemberEnd(); ++itr)
 			{
+				/*
 				if (itr->value.IsInt64())
 				{
 					eval |= rule->evaluate(assetName, itr->name.GetString(), (long)itr->value.GetInt64());
@@ -226,6 +231,10 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 				{
 					eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value.GetDouble());
 				}
+			  */
+				Logger::getLogger()->warn("%s", typeid(itr->value).name());
+
+				eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value);
 			}
 			// Add evalution timestamp
 			if (doc.HasMember(assetTimestamp.c_str()))
@@ -240,11 +249,13 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 	// Set final state: true is any calls to evalaute() returned true
 	rule->setState(eval);
 
+	Logger::getLogger()->warn("assetValues %s, eval: %d", assetValues.c_str(), eval);
+
 	return eval;
 }
 
 /**
- * Return rule trigger reason: trigger or clear the notification. 
+ * Return rule trigger reason: trigger or clear the notification.
  *
  * @return	 A JSON string
  */

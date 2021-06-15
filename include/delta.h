@@ -17,6 +17,9 @@
 #include <map>
 #include <string>
 
+//#include <rapidjson/writer.h>
+//#include <rapidjson/stringbuffer.h>
+
 #define	MIN(x, y)	((x) < (y) ? (x) : (y))
 /**
  * Delta class, derived from Notification BuiltinRule
@@ -32,6 +35,7 @@ class DeltaRule: public BuiltinRule
 		void	unlockConfig() { m_configMutex.unlock(); };
 		bool	evaluate(const std::string& asset, const std::string& datapoint, long value);
 		bool	evaluate(const std::string& asset, const std::string& datapoint, double value);
+		bool	evaluate(const std::string& asset, const std::string& datapoint, const rapidjson::Value& value);
 		typedef enum { SMA, EMA } DeltaType;
 
 	private:
@@ -67,6 +71,10 @@ class DeltaRule: public BuiltinRule
 		};
 		std::map<std::string, Deltas *>
 				m_deltas;
+		std::map<std::string, double >
+				m_lastvalue;
+		std::map<std::string, rapidjson::Document *>
+				m_lv;
 };
 
 #endif

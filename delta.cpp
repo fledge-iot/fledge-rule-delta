@@ -51,9 +51,9 @@ void DeltaRule::configure(const ConfigCategory& config)
 	// Configuration change is protected by a lock
 	lockConfig();
 	if (hasTriggers())
-	{       
+	{
 		removeTriggers();
-	}       
+	}
 	// Release lock
 	unlockConfig();
 
@@ -139,6 +139,84 @@ bool DeltaRule::evaluate(const string& asset, const string& datapoint, double va
 					  datapoint.c_str(),
 					  value,
 					  delta);
+	}
+	return rval;
+}
+
+bool DeltaRule::evaluate(const string& asset, const string& datapoint, const rapidjson::Value& value)
+{
+	map<string, double>::iterator it;
+
+	if ((it = m_lastvalue.find(datapoint)) == m_lastvalue.end())
+	{
+		m_lastvalue.insert(pair<string, double>(datapoint, value.GetDouble()));
+		Logger::getLogger()->warn("first insert");
+		return false;
+	}
+	double lastvalue = it->second;
+	it->second = value.GetDouble();
+
+	map<string, rapidjson::Document *>::iterator it2;
+
+	rapidjson::Document *new_value;
+	new_value = new rapidjson::Document();
+	new_value->CopyFrom(value, new_value->GetAllocator());
+
+	if ((it2 = m_lv.find(datapoint)) == m_lv.end())
+	{
+		m_lv.insert(pair<string, rapidjson::Document *>(datapoint, new_value));
+		Logger::getLogger()->warn("Document first insert ");
+		return false;
+	}
+
+	rapidjson::Document& lv = *(it2->second);
+
+	it2->second = new_value;
+
+	if (lv[datapoint] == value)
+	{
+		Logger::getLogger()->warn("equal Value");
+	}
+	else
+	{
+		Logger::getLogger()->warn("not equal Value");
+	}
+
+
+	if (lastvalue == value.GetDouble())
+	{
+		Logger::getLogger()->warn("equal");
+	}
+	else
+	{
+		Logger::getLogger()->warn("not equal");
+	}
+
+	/*
+	if (value.IsInt64())
+	{
+		Logger::getLogger()->warn("IsInt64");
+	}
+	else if (value.IsDouble())
+	{
+		Logger::getLogger()->warn("IsDouble");
+	}
+	else
+	{
+		Logger::getLogger()->warn("not working");
+	}
+  */
+
+	bool rval = true;
+
+	if (rval)
+	{
+		Logger::getLogger()->warn("%s.%s triggered, lastvalue: %f, value: %f",
+						asset.c_str(),
+						datapoint.c_str(),
+						lastvalue,
+						value.GetDouble()
+						);
 	}
 	return rval;
 }
