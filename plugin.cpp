@@ -58,7 +58,7 @@ static const char *default_config = QUOTE({
 		"default" : "",
 		"displayName" : "Datapoint(s)",
 		"order": "2"
-	},
+	}
 });
 
 
@@ -173,7 +173,7 @@ string plugin_triggers(PLUGIN_HANDLE handle)
 bool plugin_eval(PLUGIN_HANDLE handle,
 		 const string& assetValues)
 {
-	Document doc;
+	rapidjson::Document doc;
 	doc.Parse(assetValues.c_str());
 	if (doc.HasParseError())
 	{
@@ -194,9 +194,9 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 		if (doc.HasMember(assetName.c_str()))
 		{
 			// Get all datapoints for assetName
-			const Value& assetValue = doc[assetName.c_str()];
+			const rapidjson::Value& assetValue = doc[assetName.c_str()];
 
-			for (Value::ConstMemberIterator itr = assetValue.MemberBegin();
+			for (rapidjson::Value::ConstMemberIterator itr = assetValue.MemberBegin();
 					    itr != assetValue.MemberEnd(); ++itr)
 			{
 				eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value);
@@ -204,7 +204,7 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 			// Add evalution timestamp
 			if (doc.HasMember(assetTimestamp.c_str()))
 			{
-				const Value& assetTime = doc[assetTimestamp.c_str()];
+				const rapidjson::Value& assetTime = doc[assetTimestamp.c_str()];
 				double timestamp = assetTime.GetDouble();
 				rule->setEvalTimestamp(timestamp);
 			}
