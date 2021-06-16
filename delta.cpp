@@ -40,8 +40,8 @@ DeltaRule::~DeltaRule()
 {
 	for(std::map<std::string, rapidjson::Document *>::iterator itr = m_lastvalue.begin(); itr != m_lastvalue.end(); itr++)
 	{
-			delete (itr->second);
-			itr->second = NULL;
+		delete (itr->second);
+		itr->second = NULL;
 	}
 	m_lastvalue.clear();
 }
@@ -65,25 +65,9 @@ void DeltaRule::configure(const ConfigCategory& config)
 
 	string assetName = config.getValue("asset");
 	addTrigger(assetName, NULL);
-	m_deviation = strtol(config.getValue("deviation").c_str(), NULL, 10);
-	m_direction = config.getValue("direction");
-	string aveType = config.getValue("deltaType");
-	if (aveType.compare("Simple Moving Delta") == 0)
-	{
-		m_aveType = SMA;
-	}
-	else
-	{
-		m_aveType = EMA;
-	}
-	m_factor = strtol(config.getValue("factor").c_str(), NULL, 10);
-	for (auto it = m_deltas.begin(); it != m_deltas.end(); it++)
-	{
-		it->second->setDeltaType(m_aveType, m_factor);
-	}
 }
 
-bool DeltaRule::evaluate(const string& asset, const string& datapoint, const rapidjson::Value& value)
+bool DeltaRule::evaluate(const std::string& asset, const std::string& datapoint, const rapidjson::Value& value)
 {
 	std::map<std::string, rapidjson::Document *>::iterator it;
 

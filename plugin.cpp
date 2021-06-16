@@ -33,56 +33,33 @@
 
 
 static const char *default_config = QUOTE({
-	"description":	{
-			"description": "Trigger if the current value deviates from the moving delta by more than a defined percentage",
-			"type": "string",
-			"default":  RULE_NAME,
-			"readonly": "true"
-			},
-	"plugin": 	{
-			"description": "Trigger if the current value deviates from the moving delta by more than a defined percentage",
-			"type": "string",
-			"default":  RULE_NAME,
-			"readonly": "true"
-			},
+	"description": {
+		"description": "Trigger if the current value deviates from the last one",
+		"type": "string",
+		"default":  RULE_NAME,
+		"readonly": "true"
+	},
+	"plugin": {
+		"description": "Trigger if the current value deviates from the last one",
+		"type": "string",
+		"default":  RULE_NAME,
+		"readonly": "true"
+	},
 	"asset": 	{
-			"description" : "Asset to monitor",
-			"type" : "string",
-			"default" : "",
-			"displayName" : "Asset",
-			"order": "1"
-		       	},
-	"deviation":	{
-			"description": "Allowed percentage deviation from delta",
-			"type": "integer",
-			"default": "10",
-			"displayName":"Deviation %",
-			"order":"2"
-			},
-	"direction":	{
-			"description": "Trigger on direction of deviation",
-			"type": "enumeration",
-			"options" : [ "Above Delta", "Below Delta", "Both" ],
-			"default": "Both",
-			"displayName":"Direction",
-			"order":"3"
-			},
-	"deltaType":	{
-			"description": "The type of delta to calculate",
-			"type": "enumeration",
-			"options" : [ "Simple Moving Delta", "Exponential Moving Delta" ],
-			"default": "Simple Moving Delta",
-			"displayName":"Delta",
-			"order":"4"
-			},
-	"factor":	{
-			"description": "Exponential moving delta factor",
-			"type": "integer",
-			"default": "10",
-			"displayName":"EMA Factor",
-			"order":"5"
-			}
-	});
+		"description" : "Asset to monitor",
+		"type" : "string",
+		"default" : "",
+		"displayName" : "Asset",
+		"order": "1"
+	},
+	"datapoints": 	{
+		"description" : "Datapoint(s) to monitor. If this input field is empty, a change in any of the existing datapoints or a newly added one will triger",
+		"type" : "string",
+		"default" : "",
+		"displayName" : "Datapoint(s)",
+		"order": "2"
+	},
+});
 
 
 using namespace std;
