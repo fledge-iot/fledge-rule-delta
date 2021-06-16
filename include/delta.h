@@ -33,8 +33,7 @@ class DeltaRule: public BuiltinRule
 		void	configure(const ConfigCategory& config);
 		void	lockConfig() { m_configMutex.lock(); };
 		void	unlockConfig() { m_configMutex.unlock(); };
-		bool	evaluate(const std::string& asset, const std::string& datapoint, long value);
-		bool	evaluate(const std::string& asset, const std::string& datapoint, double value);
+
 		bool	evaluate(const std::string& asset, const std::string& datapoint, const rapidjson::Value& value);
 		typedef enum { SMA, EMA } DeltaType;
 
@@ -71,10 +70,9 @@ class DeltaRule: public BuiltinRule
 		};
 		std::map<std::string, Deltas *>
 				m_deltas;
-		std::map<std::string, double >
-				m_lastvalue;
+
 		std::map<std::string, rapidjson::Document *>
-				m_lv;
+				m_lastvalue;
 };
 
 #endif

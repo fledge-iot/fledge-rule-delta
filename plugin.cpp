@@ -222,16 +222,6 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 			for (Value::ConstMemberIterator itr = assetValue.MemberBegin();
 					    itr != assetValue.MemberEnd(); ++itr)
 			{
-				/*
-				if (itr->value.IsInt64())
-				{
-					eval |= rule->evaluate(assetName, itr->name.GetString(), (long)itr->value.GetInt64());
-				}
-				else if (itr->value.IsDouble())
-				{
-					eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value.GetDouble());
-				}
-			  */
 				Logger::getLogger()->warn("%s", typeid(itr->value).name());
 
 				eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value);
