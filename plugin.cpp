@@ -199,8 +199,6 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 			for (Value::ConstMemberIterator itr = assetValue.MemberBegin();
 					    itr != assetValue.MemberEnd(); ++itr)
 			{
-				Logger::getLogger()->warn("%s", typeid(itr->value).name());
-
 				eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value);
 			}
 			// Add evalution timestamp
