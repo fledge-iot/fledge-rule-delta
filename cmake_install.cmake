@@ -1,4 +1,4 @@
-# Install script for directory: /fledge-rule-delta
+# Install script for directory: /usr/local/fledge/fledge-rule-delta
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,44 +38,59 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  foreach(file
-      "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1"
-      "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so"
-      )
-    if(EXISTS "${file}" AND
-       NOT IS_SYMLINK "${file}")
-      file(RPATH_CHECK
-           FILE "${file}"
-           RPATH "")
-    endif()
-  endforeach()
+  if(EXISTS "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1")
+    file(RPATH_CHECK
+         FILE "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1"
+         RPATH "")
+  endif()
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1;/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so")
+   "/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local/fledge/plugins/notificationRule/Delta" TYPE SHARED_LIBRARY FILES
-    "/fledge-rule-delta/libDelta.so.1"
-    "/fledge-rule-delta/libDelta.so"
-    )
-  foreach(file
-      "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1"
-      "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so"
-      )
-    if(EXISTS "${file}" AND
-       NOT IS_SYMLINK "${file}")
-      file(RPATH_CHANGE
-           FILE "${file}"
-           OLD_RPATH "/fledge/cmake_build/C/lib:"
-           NEW_RPATH "")
-      if(CMAKE_INSTALL_DO_STRIP)
-        execute_process(COMMAND "/usr/bin/strip" "${file}")
-      endif()
+file(INSTALL DESTINATION "/usr/local/fledge/plugins/notificationRule/Delta" TYPE SHARED_LIBRARY FILES "/usr/local/fledge/fledge-rule-delta/libDelta.so.1")
+  if(EXISTS "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1")
+    file(RPATH_CHANGE
+         FILE "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1"
+         OLD_RPATH "/fledge/cmake_build/C/lib:"
+         NEW_RPATH "")
+    if(CMAKE_INSTALL_DO_STRIP)
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so.1")
     endif()
-  endforeach()
+  endif()
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so")
+    file(RPATH_CHECK
+         FILE "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so"
+         RPATH "")
+  endif()
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/fledge/plugins/notificationRule/Delta" TYPE SHARED_LIBRARY FILES "/usr/local/fledge/fledge-rule-delta/libDelta.so")
+  if(EXISTS "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so")
+    file(RPATH_CHANGE
+         FILE "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so"
+         OLD_RPATH "/fledge/cmake_build/C/lib:"
+         NEW_RPATH "")
+    if(CMAKE_INSTALL_DO_STRIP)
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/usr/local/fledge/plugins/notificationRule/Delta/libDelta.so")
+    endif()
+  endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -86,5 +101,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/fledge-rule-delta/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/usr/local/fledge/fledge-rule-delta/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -21,6 +21,7 @@
 #include <builtin_rule.h>
 #include "version.h"
 #include "delta.h"
+#include <boost/algorithm/string/trim.hpp>
 
 using namespace std;
 
@@ -68,15 +69,16 @@ void DeltaRule::configure(const ConfigCategory& config)
 	addTrigger(assetName, NULL);
 
 	string datapointNames = config.getValue("datapoints");
-	//stringstream ss(datapointNames.c_str);
 
 	stringstream ss(datapointNames);
 	while( ss.good() )
 	{
 			string substr;
-			getline( ss, substr, ',' );
-			m_datapointNames.push_back( substr );
+			std:getline( ss, substr, ',' );
+			boost::algorithm::trim(substr);
+			m_datapointNames.push_back(substr);
 	}
+
 }
 
 bool DeltaRule::chosenDatapoint(const std::string& datapoint)

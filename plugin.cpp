@@ -198,7 +198,7 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 
 			for (rapidjson::Value::ConstMemberIterator itr = assetValue.MemberBegin();
 					    itr != assetValue.MemberEnd(); ++itr)
-			{
+			{			
 				if(rule->chosenDatapoint(itr->name.GetString()))
 				{
 					eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value);
