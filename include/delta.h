@@ -34,12 +34,14 @@ class DeltaRule: public BuiltinRule
 		void	unlockConfig() { m_configMutex.unlock(); };
 
 		bool	evaluate(const std::string& asset, const std::string& datapoint, const rapidjson::Value& value);
+		bool	chosenDatapoint(const std::string& datapoint);
+
 
 	private:
 		std::mutex	m_configMutex;
-
 		std::map<std::string, rapidjson::Document *>
 				m_lastvalue;
+		std::vector<std::string> m_datapointNames;
 };
 
 #endif

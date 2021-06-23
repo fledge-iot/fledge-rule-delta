@@ -199,7 +199,10 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 			for (rapidjson::Value::ConstMemberIterator itr = assetValue.MemberBegin();
 					    itr != assetValue.MemberEnd(); ++itr)
 			{
-				eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value);
+				if(rule->chosenDatapoint(itr->name.GetString()))
+				{
+					eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value);
+				}
 			}
 			// Add evalution timestamp
 			if (doc.HasMember(assetTimestamp.c_str()))

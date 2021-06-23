@@ -64,7 +64,36 @@ void DeltaRule::configure(const ConfigCategory& config)
 	unlockConfig();
 
 	string assetName = config.getValue("asset");
+
 	addTrigger(assetName, NULL);
+
+	string datapointNames = config.getValue("datapoints");
+	//stringstream ss(datapointNames.c_str);
+
+	stringstream ss(datapointNames);
+	while( ss.good() )
+	{
+			string substr;
+			getline( ss, substr, ',' );
+			m_datapointNames.push_back( substr );
+	}
+}
+
+bool DeltaRule::chosenDatapoint(const std::string& datapoint)
+{
+	if(m_datapointNames.empty())
+	{
+		return true;
+	}
+
+	if(std::find(m_datapointNames.begin(), m_datapointNames.end(), datapoint) != m_datapointNames.end())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool DeltaRule::evaluate(const std::string& asset, const std::string& datapoint, const rapidjson::Value& value)
