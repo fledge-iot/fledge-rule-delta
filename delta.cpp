@@ -21,7 +21,8 @@
 #include <builtin_rule.h>
 #include "version.h"
 #include "delta.h"
-#include <boost/algorithm/string/trim.hpp>
+//#include <boost/algorithm/string/trim.hpp>
+#include <string_utils.h>
 
 using namespace std;
 
@@ -75,9 +76,14 @@ void DeltaRule::configure(const ConfigCategory& config)
 	{
 			string substr;
 			std:getline( ss, substr, ',' );
-			boost::algorithm::trim(substr);
-			m_datapointNames.push_back(substr);
+			//boost::algorithm::trim(substr);
+			substr = StringTrim(substr);
+			if(!substr.empty())
+			{
+				m_datapointNames.push_back(substr);
+			}
 	}
+
 
 }
 
@@ -85,6 +91,7 @@ bool DeltaRule::chosenDatapoint(const std::string& datapoint)
 {
 	if(m_datapointNames.empty())
 	{
+		Logger::getLogger()->warn("No datapoints have been submitted all datapoints in the asset will be considered");
 		return true;
 	}
 
