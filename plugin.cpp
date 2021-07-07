@@ -211,12 +211,14 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 
 			for (rapidjson::Value::ConstMemberIterator itr = assetValue.MemberBegin();
 					    itr != assetValue.MemberEnd(); ++itr)
-			{			
+			{
 				if(rule->chosenDatapoint(itr->name.GetString()))
 				{
 					eval |= rule->evaluate(assetName, itr->name.GetString(), itr->value);
 				}
+
 			}
+
 			// Add evalution timestamp
 			if (doc.HasMember(assetTimestamp.c_str()))
 			{
@@ -230,7 +232,7 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 	// Set final state: true is any calls to evalaute() returned true
 	rule->setState(eval);
 
-	Logger::getLogger()->warn("assetValues %s, eval: %d", assetValues.c_str(), eval);
+	// Logger::getLogger()->debug("assetValues %s, eval: %d", assetValues.c_str(), eval);
 
 	return eval;
 }
@@ -249,13 +251,22 @@ string plugin_reason(PLUGIN_HANDLE handle)
 	string ret = "{ \"reason\": \"";
 	ret += info.getState() == BuiltinRule::StateTriggered ? "triggered" : "cleared";
 	ret += "\"";
-	ret += ", \"asset\": " + info.getAssets();
+	// Original Asset info from Plugin
+	//ret += ", \"asset\": " + info.getAssets();
+	std::string jsonActionObject = rule->getJsonActionObject();
+	// Send Json object as string doesn't work why????
+	//ret += ", \"asset\": \"" + jsonActionObject + "\"" ;
+	// Send as Json Object
+	ret += ", \"asset\": " + jsonActionObject;
+	// Create extra entry in JSON asset name is then dublicated
+	//ret += ", " + jsonActionObject;
 	if (rule->getEvalTimestamp())
 	{
 		ret += string(", \"timestamp\": \"") + info.getUTCTimestamp() + string("\"");
 	}
 	ret += " }";
-
+	// Set action to empty string for next trigger message
+	rule->setJsonActionObject("");
 	return ret;
 }
 

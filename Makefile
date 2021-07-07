@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /usr/local/fledge/fledge-rule-delta
+CMAKE_SOURCE_DIR = /fledge-rule-delta
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /usr/local/fledge/fledge-rule-delta
+CMAKE_BINARY_DIR = /fledge-rule-delta
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -126,9 +126,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /usr/local/fledge/fledge-rule-delta/CMakeFiles /usr/local/fledge/fledge-rule-delta/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /fledge-rule-delta/CMakeFiles /fledge-rule-delta/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /usr/local/fledge/fledge-rule-delta/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /fledge-rule-delta/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

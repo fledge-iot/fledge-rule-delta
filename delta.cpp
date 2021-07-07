@@ -85,7 +85,7 @@ void DeltaRule::configure(const ConfigCategory& config)
 	string datapointNames = config.getValue("datapoints");
 
 	stringstream ss(datapointNames);
-	while( ss.good() )
+	while(ss.good())
 	{
 			string substr;
 			std:getline( ss, substr, ',' );
@@ -124,11 +124,19 @@ bool DeltaRule::evaluate(const std::string& asset, const std::string& datapoint,
 
 	rapidjson::Document* newvalue = new rapidjson::Document();
 	newvalue->CopyFrom(value, newvalue->GetAllocator());
+	std::string newValueString = seralizeJson(newvalue);
 
 	if ((it = m_lastvalue.find(datapoint)) == m_lastvalue.end())
 	{
+		// Logger::getLogger()->debug("VALUE INITIALIZING");
 		m_lastvalue.insert(std::pair<std::string, rapidjson::Document *>(datapoint, newvalue));
-		Logger::getLogger()->warn("datapoint: %s.%s, initialization", asset.c_str(), datapoint.c_str());
+		if(this->actionJsonObject.empty())
+		{
+			generateJsonActionObject(asset, datapoint, newValueString);
+		}else{
+			std::string jsonActionItem= generateJsonActionItem(asset, datapoint, newValueString);
+			appendJsonActionItem(jsonActionItem);
+		}
 		return true;
 	}
 
@@ -136,15 +144,31 @@ bool DeltaRule::evaluate(const std::string& asset, const std::string& datapoint,
 
 	rapidjson::Document* lastvalue = it->second;
 	it->second = newvalue;
+	std::string lastValueString = seralizeJson(lastvalue);
 
-	if ((*lastvalue) == (*newvalue))
+
+	if (lastValueString == newValueString)
 	{
-		Logger::getLogger()->warn("datapoint: %s.%s, value is equal", asset.c_str(), datapoint.c_str());
+		// Logger::getLogger()->debug("Values are equal. LastValue: %s NewValue: %s", lastValueString.c_str(), newValueString.c_str());
+		if(this->actionJsonObject.empty())
+		{
+			generateJsonActionObject(asset, datapoint, newValueString, lastValueString);
+		}else{
+			std::string jsonActionItem= generateJsonActionItem(asset, datapoint, newValueString, lastValueString);
+			appendJsonActionItem(jsonActionItem);
+		}
 		rval = false;
 	}
 	else
 	{
-		Logger::getLogger()->warn("datapoint: %s.%s, value is not equal -> trigger!", asset.c_str(), datapoint.c_str());
+		// Logger::getLogger()->debug("Values are NOT equal. LastValue: %s NewValue: %s", lastValueString.c_str(), newValueString.c_str());
+		if(this->actionJsonObject.empty())
+		{
+			generateJsonActionObject(asset, datapoint, newValueString, lastValueString);
+		}else{
+			std::string jsonActionItem= generateJsonActionItem(asset, datapoint, newValueString, lastValueString);
+			appendJsonActionItem(jsonActionItem);
+		}
 		rval = true;
 	}
 
@@ -156,10 +180,59 @@ bool DeltaRule::evaluate(const std::string& asset, const std::string& datapoint,
 
 	if (rval)
 	{
-		Logger::getLogger()->warn("%s.%s triggered",
+		Logger::getLogger()->info("%s.%s triggered",
 						asset.c_str(),
 						datapoint.c_str()
 						);
 	}
 	return rval;
+}
+
+const std::string DeltaRule::seralizeJson(const rapidjson::Document* doc)
+{
+	if(doc)
+	{
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<StringBuffer> writer(buffer);
+		doc->Accept(writer);
+
+		std::string jsonString = buffer.GetString();
+		return jsonString;
+
+	}else
+	{
+		return "{}";
+	}
+
+}
+
+void DeltaRule::generateJsonActionObject(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue)
+{
+	this->actionJsonObject = "{\"" + asset + "\": [{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + lastValue + ", \"Value\": " + newValue + "}}}]}";
+}
+
+const std::string DeltaRule::generateJsonActionItem(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue)
+{
+	std::string actionJsonItem = "{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + lastValue + ", \"Value\": " + newValue + "}}}";
+	return actionJsonItem;
+}
+
+void DeltaRule::appendJsonActionItem(const std::string& actionJsonItem)
+{
+	// Logger::getLogger()->debug("Append Item %s", actionJsonItem.c_str());
+	this->actionJsonObject.pop_back();
+	this->actionJsonObject.pop_back();
+	this->actionJsonObject += ", ";
+	this->actionJsonObject += actionJsonItem;
+	this->actionJsonObject += "]}";
+}
+
+const std::string DeltaRule::getJsonActionObject()
+{
+	return actionJsonObject;
+}
+
+void DeltaRule::setJsonActionObject(const std::string& jsonString)
+{
+	this->actionJsonObject = jsonString;
 }
