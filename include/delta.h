@@ -45,8 +45,8 @@ class DeltaRule: public BuiltinRule
 		std::string actionJsonObject;
 		std::vector<std::string> m_datapointNames;
 		const std::string seralizeJson(const rapidjson::Document* doc);
-		void generateJsonActionObject(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue="{}");
-		const std::string generateJsonActionItem(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue="{}");
+		void generateJsonActionObject(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue="");
+		const std::string generateJsonActionItem(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue="");
 		void appendJsonActionItem(const std::string& actionJson);
 };
 

@@ -208,13 +208,24 @@ const std::string DeltaRule::seralizeJson(const rapidjson::Document* doc)
 
 void DeltaRule::generateJsonActionObject(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue)
 {
-	this->actionJsonObject = "{\"" + asset + "\": [{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + lastValue + ", \"Value\": " + newValue + "}}}]}";
+	if(lastValue.empty())
+	{
+		this->actionJsonObject = "{\"" + asset + "\": [{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + "null" + ", \"Value\": " + newValue + "}}}]}";
+	}else{
+		this->actionJsonObject = "{\"" + asset + "\": [{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + lastValue + ", \"Value\": " + newValue + "}}}]}";
+	}
 }
 
 const std::string DeltaRule::generateJsonActionItem(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue)
 {
-	std::string actionJsonItem = "{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + lastValue + ", \"Value\": " + newValue + "}}}";
-	return actionJsonItem;
+	if(lastValue.empty())
+	{
+		std::string actionJsonItem = "{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + "null" + ", \"Value\": " + newValue + "}}}";
+		return actionJsonItem;
+	}else{
+		std::string actionJsonItem = "{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + lastValue + ", \"Value\": " + newValue + "}}}";
+		return actionJsonItem;
+	}
 }
 
 void DeltaRule::appendJsonActionItem(const std::string& actionJsonItem)
