@@ -48,6 +48,7 @@ class DeltaRule: public BuiltinRule
 		void generateJsonActionObject(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue="");
 		const std::string generateJsonActionItem(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue="");
 		void appendJsonActionItem(const std::string& actionJson);
+		std::string escape_json(const std::string &s);
 };
 
 #endif

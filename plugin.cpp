@@ -219,6 +219,10 @@ bool plugin_eval(PLUGIN_HANDLE handle,
 
 			}
 
+			if(!eval)
+			{
+				rule->setJsonActionObject("");
+			}
 			// Add evalution timestamp
 			if (doc.HasMember(assetTimestamp.c_str()))
 			{
