@@ -78,43 +78,16 @@ void DeltaRule::configure(const ConfigCategory& config)
 	// Release lock
 	unlockConfig();
 
-	string assetName = config.getValue("asset");
+	std::string assetName = config.getValue("asset");
 
 	addTrigger(assetName, NULL);
 
-	string datapointNames = config.getValue("datapoints");
-
-	stringstream ss(datapointNames);
-	while(ss.good())
-	{
-			string substr;
-			std:getline( ss, substr, ',' );
-			//boost::algorithm::trim(substr);
-			substr = StringTrim(substr);
-			if(!substr.empty())
-			{
-				m_datapointNames.push_back(substr);
-			}
+	datapointJsonString = config.getValue("datapoints");
+	getDatapointNamesConfig();
+	for (string elem: datapointNames){
+		Logger::getLogger()->debug(elem.c_str());
 	}
 
-}
-
-bool DeltaRule::chosenDatapoint(const std::string& datapoint)
-{
-	if(m_datapointNames.empty())
-	{
-		Logger::getLogger()->warn("No datapoints have been submitted all datapoints in the asset will be considered");
-		return true;
-	}
-
-	if(std::find(m_datapointNames.begin(), m_datapointNames.end(), datapoint) != m_datapointNames.end())
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
 
 bool DeltaRule::evaluate(const std::string& asset, const std::string& datapoint, const rapidjson::Value& value)
@@ -127,7 +100,7 @@ bool DeltaRule::evaluate(const std::string& asset, const std::string& datapoint,
 
 	if ((it = m_lastvalue.find(datapoint)) == m_lastvalue.end())
 	{
-		// Logger::getLogger()->debug("VALUE INITIALIZING");
+		//Logger::getLogger()->debug("VALUE INITIALIZING");
 		m_lastvalue.insert(std::pair<std::string, rapidjson::Document *>(datapoint, newvalue));
 		if(this->actionJsonObject.empty())
 		{
@@ -205,24 +178,45 @@ const std::string DeltaRule::seralizeJson(const rapidjson::Document* doc)
 
 }
 
+bool DeltaRule::chosenDatapoint(const std::string& datapoint)
+{
+	if(datapointNames.empty())
+	{
+		Logger::getLogger()->warn("No datapoints have been submitted all datapoints in the asset will be considered");
+		return true;
+	}
+
+	if(std::find(datapointNames.begin(), datapointNames.end(), datapoint) != datapointNames.end())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
 void DeltaRule::generateJsonActionObject(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue)
 {
+	const std::string new_datapoint = getAliasNameConfig(datapoint);
 	if(lastValue.empty())
 	{
-		this->actionJsonObject = "{\"" + asset + "\": [{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + "null" + ", \"Value\": " + newValue + "}}}]}";
+		this->actionJsonObject = "{\"" + asset + "\": {\"" + new_datapoint + "\":  { \"lastValue\": " + "null" + ", \"value\": " + newValue + "}}}";
 	}else{
-		this->actionJsonObject = "{\"" + asset + "\": [{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + lastValue + ", \"Value\": " + newValue + "}}}]}";
+		this->actionJsonObject = "{\"" + asset + "\": {\"" + new_datapoint + "\":  { \"lastValue\": " + lastValue + ", \"value\": " + newValue + "}}}";
 	}
 }
 
 const std::string DeltaRule::generateJsonActionItem(const std::string& asset, const std::string& datapoint, const std::string& newValue, const std::string& lastValue)
 {
+	const std::string new_datapoint = getAliasNameConfig(datapoint);
 	if(lastValue.empty())
 	{
-		std::string actionJsonItem = "{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + "null" + ", \"Value\": " + newValue + "}}}";
+		std::string actionJsonItem = "{\"" + new_datapoint + "\": { \"lastValue\": " + "null" + ", \"value\": " + newValue + "}}";
 		return actionJsonItem;
 	}else{
-		std::string actionJsonItem = "{\"" + datapoint + "\": { \"action\"  : { \"lastValue\": " + lastValue + ", \"Value\": " + newValue + "}}}";
+		std::string actionJsonItem = "{\"" + new_datapoint + "\": { \"lastValue\": " + lastValue + ", \"value\": " + newValue + "}}";
 		return actionJsonItem;
 	}
 }
@@ -273,4 +267,34 @@ std::string DeltaRule::escape_json(const std::string &s)
 		}
 	}
 	return o.str();
+}
+
+void DeltaRule::getDatapointNamesConfig(){
+	Document configDoc;
+	configDoc.Parse(datapointJsonString.c_str());
+
+	for (Value::ConstMemberIterator itr = 	configDoc.MemberBegin();itr != 	configDoc.MemberEnd(); ++itr){
+			datapointNames.push_back(itr->name.GetString());
+	}
+}
+
+const std::string DeltaRule::getAliasNameConfig(const std::string& datapointName){
+	std::string alias_name;
+	Document configDoc;
+	configDoc.Parse(datapointJsonString.c_str());
+
+	for (Value::ConstMemberIterator itr = 	configDoc.MemberBegin();itr != 	configDoc.MemberEnd(); ++itr)
+  {
+		if (datapointName==itr->name.GetString()){
+			if(itr->value.IsString()){
+				alias_name = itr->value.GetString();
+				if(alias_name.empty() == true){
+					alias_name=itr->name.GetString();
+				}
+			}else{
+				Logger::getLogger()->info("Please submit a String as alias name");
+			}
+		}
+	}
+	return alias_name;
 }

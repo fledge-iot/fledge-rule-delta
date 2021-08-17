@@ -66,11 +66,11 @@ static const char *default_config = QUOTE({
 		"order": "1"
 	},
 	"datapoints": 	{
-		"description" : "Datapoint(s) to monitor. If this input field is empty, a change in any of the existing datapoints or a newly added one will triger",
-		"type" : "string",
-		"default" : "",
-		"displayName" : "Datapoint(s)",
-		"order": "2"
+	"description" : "Add datapoints to set triggers and alias names to define the keys in the action json",
+	"type" : "JSON",
+	"default" : "{ \"datapoint_name\" : \"alias_name\",\"sinusoid\" : \"cosinus\"}",
+	"displayName" : "JSON Configuration",
+	"order" : "2"
 	}
 });
 
