@@ -213,22 +213,23 @@ const std::string DeltaRule::generateJsonActionItem(const std::string& asset, co
 	const std::string new_datapoint = getAliasNameConfig(datapoint);
 	if(lastValue.empty())
 	{
-		std::string actionJsonItem = "{\"" + new_datapoint + "\": { \"lastValue\": " + "null" + ", \"value\": " + newValue + "}}";
+		std::string actionJsonItem = "\"" + new_datapoint + "\": { \"lastValue\": " + "null" + ", \"value\": " + newValue + "}}";
 		return actionJsonItem;
 	}else{
-		std::string actionJsonItem = "{\"" + new_datapoint + "\": { \"lastValue\": " + lastValue + ", \"value\": " + newValue + "}}";
+		std::string actionJsonItem = "\"" + new_datapoint + "\": { \"lastValue\": " + lastValue + ", \"value\": " + newValue + "}}";
 		return actionJsonItem;
 	}
 }
 
 void DeltaRule::appendJsonActionItem(const std::string& actionJsonItem)
 {
-	// Logger::getLogger()->debug("Append Item %s", actionJsonItem.c_str());
+	Logger::getLogger()->debug("Append Item %s", actionJsonItem.c_str());
+	//Delete last two characters to append item to current object
 	this->actionJsonObject.pop_back();
 	this->actionJsonObject.pop_back();
 	this->actionJsonObject += ", ";
 	this->actionJsonObject += actionJsonItem;
-	this->actionJsonObject += "]}";
+	this->actionJsonObject += "}";
 }
 
 const std::string DeltaRule::getJsonActionObject()
