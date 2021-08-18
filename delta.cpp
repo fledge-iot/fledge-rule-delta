@@ -84,9 +84,9 @@ void DeltaRule::configure(const ConfigCategory& config)
 
 	datapointJsonString = config.getValue("datapoints");
 	getDatapointNamesConfig();
-	for (string elem: datapointNames){
-		Logger::getLogger()->debug(elem.c_str());
-	}
+	// for (string elem: datapointNames){
+	// 	Logger::getLogger()->debug(elem.c_str());
+	// }
 
 }
 
@@ -223,7 +223,7 @@ const std::string DeltaRule::generateJsonActionItem(const std::string& asset, co
 
 void DeltaRule::appendJsonActionItem(const std::string& actionJsonItem)
 {
-	Logger::getLogger()->debug("Append Item %s", actionJsonItem.c_str());
+	//Logger::getLogger()->debug("Append Item %s", actionJsonItem.c_str());
 	//Delete last two characters to append item to current object
 	this->actionJsonObject.pop_back();
 	this->actionJsonObject.pop_back();
