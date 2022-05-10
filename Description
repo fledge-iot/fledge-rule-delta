@@ -1,0 +1,1 @@
+Delta notification rule plugin package for Fledge. Sends notifications when values differ from the delta by more than a prescribed percentage.
