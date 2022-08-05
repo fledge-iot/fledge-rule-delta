@@ -5,7 +5,7 @@
 Delta Rule
 ==========
 
-The *fledge-rule-delta* plugin is a notifcation rule that triggers when a data point value changes. When a datapoint that is monitored changes the plugin will trigger. An alias value is given for the triggered datapoitn and is included in the reason mesage when the plugin triggers.
+The *fledge-rule-delta* plugin is a notification rule that triggers when a data point value changes. When a datapoint that is monitored changes the plugin will trigger. An alias value is given for the triggered datapoint and is included in the reason massage when the plugin triggers.
 
 During the configuration of a notification use the screen presented to choose the delta plugin as the rule.
 
