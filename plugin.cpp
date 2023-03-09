@@ -46,12 +46,6 @@
 
 
 static const char *default_config = QUOTE({
-	"description": {
-		"description": "Trigger if the current value deviates from the last one",
-		"type": "string",
-		"default":  RULE_NAME,
-		"readonly": "true"
-	},
 	"plugin": {
 		"description": "Trigger if the current value deviates from the last one",
 		"type": "string",
